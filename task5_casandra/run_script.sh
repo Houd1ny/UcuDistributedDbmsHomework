@@ -1,0 +1,1 @@
+cqlsh 172.17.0.2 9042 --file=script.sql --cqlversion="3.4.4"

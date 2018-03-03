@@ -1,0 +1,83 @@
+CREATE (yuriy:Person {name:"Yuriy"})
+CREATE (petro:Person {name:"Petro"})
+CREATE (car:Item {name:"Car"})
+CREATE (beer:Item {name:"Beer"})
+CREATE (tv:Item {name:"TV"})
+CREATE (spiner:Item {name:"Spiner"})
+CREATE (pc:Item {name:"PC"})
+CREATE (order1:Order {name:"Order1"})
+CREATE (order2:Order {name:"Order2"})
+CREATE (order3:Order {name:"Order3"})
+CREATE (order4:Order {name:"Order4"})
+CREATE (yuriy)-[:HAVE]->(order1)-[:Contain]->(car)
+CREATE (order1)-[:Contain]->(beer)
+CREATE (yuriy)-[:HAVE]->(order2)-[:Contain]->(beer)
+CREATE (petro)-[:HAVE]->(order3)-[:Contain]->(car)
+CREATE (petro)-[:HAVE]->(order4)-[:Contain]->(beer)
+CREATE (order4)-[:Contain]->(tv)
+CREATE (petro)-[:VIEW]->(spiner)
+CREATE (yuriy)-[:VIEW]->(spiner)
+CREATE (yuriy)-[:VIEW]->(car)
+CREATE (yuriy)-[:VIEW]->(beer)
+CREATE (yuriy)-[:VIEW]->(pc)
+
+task1
+match (order:Order {name:"Order1"})
+match (order) - [:Contain] -> (item)
+return item
+
+task2
+match (yuriy:Person {name:"Yuriy"})
+match (yuriy) - [:HAVE] -> (order)
+return order
+
+task3
+match (:Person {name:"Petro"})-[:HAVE]->()-[Contain]->(item)
+return item
+
+task4
+match (:Person {name:"Yuriy"})-[:HAVE]->()-[Contain]->(item)
+return count(item)
+
+task5
+match (yuriy:Person {name:"Yuriy"})
+match (yuriy) - [:VIEW] -> (item)
+return item
+
+task6
+match (yuriy:Person {name:"Yuriy"})
+match (yuriy) - [:VIEW] -> (item)
+WHERE not (yuriy)-[:HAVE]->()-[:Contain]->(item)
+return item
+
+task7
+match (order:Order)-[:Contain]->(:Item {name:"TV"})
+match (order)-[:Contain]->(item)
+return item 
+
+task8
+match (person)-[:HAVE]->()-[:Contain]->(item {name:"TV"} )
+return person
+
+task9
+match (person)-[:HAVE]->()-[:Contain]->(:Item{name:"TV"} )
+match (person)-[:HAVE]->()-[:Contain]->(item )
+return item
+
+task10
+match (person)-[:VIEW]->(:Item{name:"Spiner"} )
+match (person)-[:HAVE]->()-[:Contain]->(item )
+return item
+
+task11
+match (target_item:Item {name:"TV"})
+
+match (order:Order)-[:Contain]-> (target_item)
+match (order)-[:Contain]->(item_in_order)
+
+match (person)-[:HAVE]->()-[:Contain]->(target_item)
+match (person)-[:HAVE]->()-[:Contain]->(item_of_customer )
+match (person)-[:VIEW]->( items_view )
+
+
+return item_in_order, item_of_customer, items_view
